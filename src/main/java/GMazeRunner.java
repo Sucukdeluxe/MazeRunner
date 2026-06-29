@@ -40,7 +40,7 @@ import java.util.logging.LogManager;
 @ExtensionInfo(
         Title = "GMazeRunner",
         Description = "It could be better",
-        Version = "1.5.1",
+        Version = "1.5.2",
         Author = "Julianty"
 )
 
