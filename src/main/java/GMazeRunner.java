@@ -40,7 +40,7 @@ import java.util.logging.LogManager;
 @ExtensionInfo(
         Title = "GMazeRunner",
         Description = "It could be better",
-        Version = "1.5.2",
+        Version = "1.5.3",
         Author = "Julianty"
 )
 
@@ -493,7 +493,7 @@ public class GMazeRunner extends ExtensionForm implements NativeKeyListener {
                     currentX = hEntityUpdate.getTile().getX();  currentY = hEntityUpdate.getTile().getY();
                 }
                 else if(radioButtonRun.isSelected()){
-                    HPoint movingTo = hEntityUpdate.getMovingTo();      // fix bug roller, because the coordinate is not updated
+                    HPoint movingTo = hEntityUpdate.getMovingTo();
                     if(movingTo != null){
                         currentX = movingTo.getX();  currentY = movingTo.getY();
                     } else {
@@ -511,7 +511,19 @@ public class GMazeRunner extends ExtensionForm implements NativeKeyListener {
                 for(i = 0; i < listPositionTiles.size(); i++){
                     if(currentX == listPositionTiles.get(i).getX() && currentY == listPositionTiles.get(i).getY()){
                         try {
-                            sendToServer(new HPacket(String.format("{out:MoveAvatar}{i:%s}{i:%s}", listPositionTiles.get(i+1).getX(), listPositionTiles.get(i+1).getY())));
+                            int targetIdx = i + 1;
+                            if(radioButtonRun.isSelected()){
+                                int stepX = listPositionTiles.get(targetIdx).getX() - listPositionTiles.get(i).getX();
+                                int stepY = listPositionTiles.get(targetIdx).getY() - listPositionTiles.get(i).getY();
+                                if(Math.abs(stepX) <= 1 && Math.abs(stepY) <= 1){
+                                    while(targetIdx + 1 < listPositionTiles.size()
+                                            && listPositionTiles.get(targetIdx+1).getX() - listPositionTiles.get(targetIdx).getX() == stepX
+                                            && listPositionTiles.get(targetIdx+1).getY() - listPositionTiles.get(targetIdx).getY() == stepY){
+                                        targetIdx++;
+                                    }
+                                }
+                            }
+                            sendToServer(new HPacket(String.format("{out:MoveAvatar}{i:%s}{i:%s}", listPositionTiles.get(targetIdx).getX(), listPositionTiles.get(targetIdx).getY())));
                         }catch (Exception e) {
                             listPositionTiles.clear();
                             Platform.runLater(()-> checkCoords.setText("Catch Coords (" + listPositionTiles.size() + ")"));
