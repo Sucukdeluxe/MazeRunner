@@ -668,8 +668,10 @@ public class GMazeRunner extends ExtensionForm implements NativeKeyListener {
     public void passGate(){
         try{
             for(Integer gateId: listGates){
-                int xGate = floorItemsID_HPoint.get(gateId).getX();
-                int yGate = floorItemsID_HPoint.get(gateId).getY();
+                HPoint gate = floorItemsID_HPoint.get(gateId);
+                if(gate == null) continue;
+                int xGate = gate.getX();
+                int yGate = gate.getY();
 
                 // Entry to conditional 'if' when (Example):
                 // UserPosition (3, 6); GatePosition (4, 6) OR UserPosition (5, 6); GatePosition (4, 6)
@@ -689,8 +691,10 @@ public class GMazeRunner extends ExtensionForm implements NativeKeyListener {
         try{
             // The order of selection with the switches matters if they are on the sides, but applying a delay seems to solve it.
             for(Integer switchId: listSwitches){ // Iterate through Java List
-                int xSwitch = floorItemsID_HPoint.get(switchId).getX();
-                int ySwitch = floorItemsID_HPoint.get(switchId).getY();
+                HPoint switchPoint = floorItemsID_HPoint.get(switchId);
+                if(switchPoint == null) continue;
+                int xSwitch = switchPoint.getX();
+                int ySwitch = switchPoint.getY();
 
                 // Entry to conditional 'if' when (Example):
                 // UserCoord (3, 6); SwitchCoord (4, 6) OR UserCoord (5, 6); SwitchCoord (4, 6)
