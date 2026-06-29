@@ -493,10 +493,12 @@ public class GMazeRunner extends ExtensionForm implements NativeKeyListener {
                     currentX = hEntityUpdate.getTile().getX();  currentY = hEntityUpdate.getTile().getY();
                 }
                 else if(radioButtonRun.isSelected()){
-                    currentX = jokerX;  currentY = jokerY;      // fix bug roller, because the coordinate is not updated
-                    Platform.runLater(()-> textCoords.setText("Coords: ( " + jokerX + ", " + jokerY + " )"));   // fix bug roller (ignore)
-
-                    currentX = hEntityUpdate.getMovingTo().getX();  currentY = hEntityUpdate.getMovingTo().getY();
+                    HPoint movingTo = hEntityUpdate.getMovingTo();      // fix bug roller, because the coordinate is not updated
+                    if(movingTo != null){
+                        currentX = movingTo.getX();  currentY = movingTo.getY();
+                    } else {
+                        currentX = jokerX;  currentY = jokerY;
+                    }
                 }
                 Platform.runLater(()-> textCoords.setText("Coords: ( " + currentX + ", " + currentY + " )"));
 
