@@ -2,6 +2,7 @@
 import com.github.kwhat.jnativehook.NativeHookException;
 import com.github.kwhat.jnativehook.keyboard.NativeKeyEvent;
 import com.github.kwhat.jnativehook.keyboard.NativeKeyListener;*/
+import gearth.extensions.ExtensionBase;
 import gearth.extensions.ExtensionForm;
 import gearth.extensions.ExtensionInfo;
 import gearth.extensions.parsers.HEntity;
@@ -39,7 +40,7 @@ import java.util.logging.LogManager;
 @ExtensionInfo(
         Title = "GMazeRunner",
         Description = "It could be better",
-        Version = "1.5.0",
+        Version = "1.5.1",
         Author = "Julianty"
 )
 
@@ -251,6 +252,21 @@ public class GMazeRunner extends ExtensionForm implements NativeKeyListener {
 
         intercept(HMessage.Direction.TOCLIENT, "Users", this::InUsers); // Intercept this packet when you enter or restart a room
         intercept(HMessage.Direction.TOCLIENT, "UserUpdate", this::InUserUpdate);
+    }
+
+    @Override
+    public void intercept(HMessage.Direction direction, ExtensionBase.MessageListener messageListener) {
+        super.intercept(direction, InterceptGuard.guard(messageListener));
+    }
+
+    @Override
+    public void intercept(HMessage.Direction direction, String headerName, ExtensionBase.MessageListener messageListener) {
+        super.intercept(direction, headerName, InterceptGuard.guard(messageListener));
+    }
+
+    @Override
+    public void intercept(HMessage.Direction direction, int headerId, ExtensionBase.MessageListener messageListener) {
+        super.intercept(direction, headerId, InterceptGuard.guard(messageListener));
     }
 
     private void InUsers(HMessage hMessage) {
@@ -639,7 +655,7 @@ public class GMazeRunner extends ExtensionForm implements NativeKeyListener {
                 System.out.println("Game-data Retrieved!");
                 sendToServer(new HPacket("{out:GetHeightMap}")); // When its sent, get wallitems, flooritems and other things without restart room
             }
-            catch (IOException e){
+            catch (Throwable e){
                 Platform.runLater(()-> txtConnectedTo.setText("Error: " + e.getMessage()));
             }
 
